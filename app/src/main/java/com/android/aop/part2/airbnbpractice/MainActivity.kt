@@ -4,7 +4,9 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.viewpager2.widget.ViewPager2
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
+import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -23,12 +25,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.mapView.onCreate(savedInstanceState)
 
         binding.mapView.getMapAsync(this)
+
+
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -42,7 +48,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
 
         val uiSetting = naverMap.uiSettings
-        uiSetting.isLocationButtonEnabled = true
+        uiSetting.isLocationButtonEnabled = false
+
+        binding.currentLocationButton.map = naverMap
 
         locationSource = FusedLocationSource(this@MainActivity,100)
         naverMap.locationSource = locationSource
