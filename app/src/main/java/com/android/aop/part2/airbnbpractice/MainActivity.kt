@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
 import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
+import com.android.aop.part2.airbnbpractice.uitl.RetrofitModule
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -63,39 +64,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getHouseListFromAPI() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://run.mocky.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        retrofit.create(HouseService::class.java).also {
-            it.getHouseList()
-                .enqueue(object : Callback<HouseDto> {
-                    override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
-                        if (response.isSuccessful.not()) {
-                            return // 실패처리에 대한 구현
-                        }
-                        response.body()?.let { dto ->
-                            dto.items.forEach { model ->
-                                val marker = Marker()
-                                marker.position = LatLng(model.lat, model.lng)
-                                marker.map = naverMap
-                                marker.tag = model.id
-                                marker.icon = MarkerIcons.BLACK
-                                marker.iconTintColor = Color.RED
-                            }
-                            houseRecyclerViewAdapter.addAll(dto.items)
-                            houseViewPagerAdapter.addAll(dto.items)
-                        }
+        val houseService = RetrofitModule.create<HouseService>(baseUrl = BASE_URL_HOUSE)
+
+        houseService.getHouseList().enqueue(object : Callback<HouseDto> {
+            override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
+                response.body()?.let { dto ->
+                    dto.items.forEach { model ->
+                        val marker = Marker()
+                        marker.position = LatLng(model.lat, model.lng)
+                        marker.map = naverMap
+                        marker.tag = model.id
+                        marker.icon = MarkerIcons.BLACK
+                        marker.iconTintColor = Color.RED
                     }
+                    houseRecyclerViewAdapter.addAll(dto.items)
+                    houseViewPagerAdapter.addAll(dto.items)
+                }
+            }
 
-                    override fun onFailure(call: Call<HouseDto>, t: Throwable) {
-                        //실패처리에 대한 구현
-                    }
-                })
-        }
-
+            override fun onFailure(call: Call<HouseDto>, t: Throwable) {
+                //실패처리에 대한 구현
+            }
+        })
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -117,6 +110,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     companion object {
+        private const val BASE_URL_HOUSE = "https://run.mocky.io/"
         private const val LOCATION_PERMISSION_REQUEST_CODE = 100
     }
 
