@@ -23,7 +23,6 @@ class HouseRecyclerViewAdapter :
             )
         )
 
-
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
         holder.bind(houseList[position])
     }
@@ -37,21 +36,9 @@ class HouseRecyclerViewAdapter :
     }
 }
 
-class RecyclerViewHolder(val binding: ItemHouseRecyclerviewBinding) :
+class RecyclerViewHolder(private val binding: ItemHouseRecyclerviewBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(houseModel: HouseModel) {
-        val priceTextView = binding.priceTextView
-        val titleTextView = binding.titleTextView
-        val thumbnailImageView = binding.thumbnailImageView
-
-        titleTextView.text = houseModel.title
-        priceTextView.text = houseModel.price
-
-        Glide
-            .with(thumbnailImageView.context)
-            .load(houseModel.imgUrl)
-            .transform(CenterCrop())
-            .into(thumbnailImageView)
+        binding.model = houseModel
     }
 }

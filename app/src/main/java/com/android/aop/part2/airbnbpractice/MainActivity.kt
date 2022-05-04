@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
 import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
@@ -20,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val binding by lazy { ActivityMainBinding.inflate((layoutInflater)) }
+    private lateinit var binding: ActivityMainBinding
 
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
@@ -31,9 +32,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
+
         binding.containerBottomSheet.rvHouse.adapter = houseRecyclerViewAdapter
         binding.houseViewPager2.adapter = houseViewPagerAdapter
     }
@@ -55,8 +58,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         locationSource = FusedLocationSource(this@MainActivity, 100)
         naverMap.locationSource = locationSource
-
-
 
         getHouseListFromAPI()
     }
@@ -87,6 +88,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             houseViewPagerAdapter.addAll(dto.items)
                         }
                     }
+
                     override fun onFailure(call: Call<HouseDto>, t: Throwable) {
                         //실패처리에 대한 구현
                     }
