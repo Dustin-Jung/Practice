@@ -20,21 +20,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    val binding by lazy { ActivityMainBinding.inflate((layoutInflater))}
+    private val binding by lazy { ActivityMainBinding.inflate((layoutInflater)) }
 
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
 
 
+    private val houseRecyclerViewAdapter by lazy { HouseRecyclerViewAdapter() }
+    private val houseViewPagerAdapter by lazy { HouseViewPagerAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.mapView.onCreate(savedInstanceState)
-
         binding.mapView.getMapAsync(this)
-
-
+        binding.containerBottomSheet.rvHouse.adapter = houseRecyclerViewAdapter
+        binding.houseViewPager2.adapter = houseViewPagerAdapter
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.maxZoom = 20.0
         naverMap.minZoom = 10.0
 
-        val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.498095,127.027610))
+        val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.498095, 127.027610))
         naverMap.moveCamera(cameraUpdate)
 
         val uiSetting = naverMap.uiSettings
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.currentLocationButton.map = naverMap
 
-        locationSource = FusedLocationSource(this@MainActivity,100)
+        locationSource = FusedLocationSource(this@MainActivity, 100)
         naverMap.locationSource = locationSource
 
 
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         getHouseListFromAPI()
     }
 
-    private fun getHouseListFromAPI(){
+    private fun getHouseListFromAPI() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://run.mocky.io/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -68,24 +69,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         retrofit.create(HouseService::class.java).also {
             it.getHouseList()
-                .enqueue(object : Callback<HouseDto>{
+                .enqueue(object : Callback<HouseDto> {
                     override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
-                        if(response.isSuccessful.not()){
+                        if (response.isSuccessful.not()) {
                             return // 실패처리에 대한 구현
                         }
-
-                        response.body()?.let { dto->
-                            dto.items.forEach{ model ->
+                        response.body()?.let { dto ->
+                            dto.items.forEach { model ->
                                 val marker = Marker()
-                                marker.position = LatLng(model.lat,model.lng)
+                                marker.position = LatLng(model.lat, model.lng)
                                 marker.map = naverMap
                                 marker.tag = model.id
                                 marker.icon = MarkerIcons.BLACK
                                 marker.iconTintColor = Color.RED
                             }
+                            houseRecyclerViewAdapter.addAll(dto.items)
+                            houseViewPagerAdapter.addAll(dto.items)
                         }
                     }
-
                     override fun onFailure(call: Call<HouseDto>, t: Throwable) {
                         //실패처리에 대한 구현
                     }
@@ -94,22 +95,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(requestCode != LOCATION_PERMISSION_REQUEST_CODE){
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
 
-        if(locationSource.onRequestPermissionsResult(requestCode,permissions,grantResults)){
-            if(!locationSource.isActivated){
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated) {
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
             return
         }
     }
 
-    companion object{
+    companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 100
     }
 

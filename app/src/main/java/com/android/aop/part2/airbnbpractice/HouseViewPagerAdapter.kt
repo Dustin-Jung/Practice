@@ -8,31 +8,36 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
-class HouseViewPagerAdapter(val houseList: List<HouseModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HouseViewPagerAdapter :
+    RecyclerView.Adapter<HouseViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    private val houseList = mutableListOf<HouseModel>()
 
-        val binding = ItemHouseInformationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder =
+        HouseViewHolder(
+            ItemHouseInformationBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
-        return HouseViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        val binding = (holder as HouseViewHolder).binding
-
+    override fun onBindViewHolder(holder: HouseViewHolder, position: Int) {
         holder.bind(houseList[position])
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount(): Int = houseList.size
 
-        return houseList.size
+    fun addAll(list: List<HouseModel>) {
+        houseList.addAll(list)
+        notifyDataSetChanged()
     }
 }
 
-class HouseViewHolder(val binding: ItemHouseInformationBinding) : RecyclerView.ViewHolder(binding.root){
+class HouseViewHolder(private val binding: ItemHouseInformationBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(houseModel: HouseModel){
+    fun bind(houseModel: HouseModel) {
         val priceTextView = binding.priceTextView
         val titleTextView = binding.titleTextView
         val thumbnailImageView = binding.thumbnailImageView
