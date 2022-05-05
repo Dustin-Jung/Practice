@@ -20,12 +20,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    val binding by lazy { ActivityMainBinding.inflate((layoutInflater))}
+    private val binding by lazy { ActivityMainBinding.inflate((layoutInflater))}
 
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
 
-
+    private val houseRecyclerViewAdapter by lazy { HouseRecyclerViewAdapter() }
+    private val houseViewPagerAdapter by lazy { HouseViewPagerAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.mapView.getMapAsync(this)
 
+        binding.containerBottomSheet.recyclerView.adapter = houseRecyclerViewAdapter
 
+        binding.houseViewPager2.adapter = houseViewPagerAdapter
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -83,6 +86,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 marker.icon = MarkerIcons.BLACK
                                 marker.iconTintColor = Color.RED
                             }
+
+                            houseRecyclerViewAdapter.addAll(dto.items)
+                            houseViewPagerAdapter.addAll(dto.items)
                         }
                     }
 

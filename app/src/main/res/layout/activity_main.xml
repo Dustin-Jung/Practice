@@ -28,6 +28,7 @@
         android:layout_margin="12dp"/>
 
 
-    <include layout="@layout/bottom_sheet_dialog"/>
+    <include layout="@layout/bottom_sheet_dialog"
+        android:id="@+id/containerBottomSheet"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
