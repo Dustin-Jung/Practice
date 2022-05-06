@@ -38,6 +38,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.containerBottomSheet.recyclerView.adapter = houseRecyclerViewAdapter
 
         binding.houseViewPager2.adapter = houseViewPagerAdapter
+
+        binding.houseViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                val selectedHouseModel = houseViewPagerAdapter.houseList[position]
+                val cameraUpdate = CameraUpdate.scrollTo(LatLng(selectedHouseModel.lat,selectedHouseModel.lng))
+                    .animate(CameraAnimation.Easing)
+
+
+                naverMap.moveCamera(cameraUpdate)
+            }
+        })
     }
 
     override fun onMapReady(map: NaverMap) {

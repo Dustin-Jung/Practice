@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class HouseViewPagerAdapter(): RecyclerView.Adapter<HouseViewHolder>() {
 
-    private val houseList = mutableListOf<HouseModel>()
+    val houseList = mutableListOf<HouseModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder {
 
