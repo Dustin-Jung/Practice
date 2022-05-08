@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.android.aop.part2.airbnbpractice.HouseModel" />
+            type="com.android.aop.part2.airbnbpractice.data.HouseModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

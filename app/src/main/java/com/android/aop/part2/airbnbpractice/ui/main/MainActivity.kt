@@ -1,13 +1,15 @@
-package com.android.aop.part2.airbnbpractice
+package com.android.aop.part2.airbnbpractice.ui.main
 
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.databinding.DataBindingUtil
-import androidx.viewpager2.widget.ViewPager2
+import com.android.aop.part2.airbnbpractice.R
+import com.android.aop.part2.airbnbpractice.data.HouseDto
+import com.android.aop.part2.airbnbpractice.data.HouseService
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
-import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
+import com.android.aop.part2.airbnbpractice.ui.HouseRecyclerViewAdapter
+import com.android.aop.part2.airbnbpractice.ui.HouseViewPagerAdapter
 import com.android.aop.part2.airbnbpractice.uitl.RetrofitModule
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -17,8 +19,6 @@ import com.naver.maps.map.util.MarkerIcons
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
