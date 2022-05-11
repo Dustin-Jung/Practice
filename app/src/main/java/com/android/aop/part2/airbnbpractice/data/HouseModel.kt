@@ -1,4 +1,4 @@
-package com.android.aop.part2.airbnbpractice
+package com.android.aop.part2.airbnbpractice.data
 
 data class HouseModel (
 
