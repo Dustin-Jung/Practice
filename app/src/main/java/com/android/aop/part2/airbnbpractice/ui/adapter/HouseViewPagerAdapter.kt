@@ -1,20 +1,19 @@
-package com.android.aop.part2.airbnbpractice.ui
+package com.android.aop.part2.airbnbpractice.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.aop.part2.airbnbpractice.data.HouseModel
 import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.android.aop.part2.airbnbpractice.ui.adapter.viewholder.HouseViewHolder
 
-class HouseViewPagerAdapter(): RecyclerView.Adapter<HouseViewHolder>() {
+class HouseViewPagerAdapter : RecyclerView.Adapter<HouseViewHolder>() {
 
     val houseList = mutableListOf<HouseModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder {
 
-        val binding = ItemHouseInformationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemHouseInformationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return HouseViewHolder(binding)
     }
@@ -29,26 +28,8 @@ class HouseViewPagerAdapter(): RecyclerView.Adapter<HouseViewHolder>() {
         return houseList.size
     }
 
-    fun addAll(list: List<HouseModel>){
+    fun addAll(list: List<HouseModel>) {
         houseList.addAll(list)
         notifyDataSetChanged()
-    }
-}
-
-class HouseViewHolder(val binding: ItemHouseInformationBinding) : RecyclerView.ViewHolder(binding.root){
-
-    fun bind(houseModel: HouseModel){
-        val priceTextView = binding.priceTextView
-        val titleTextView = binding.titleTextView
-        val thumbnailImageView = binding.thumbnailImageView
-
-        titleTextView.text = houseModel.title
-        priceTextView.text = houseModel.price
-
-        Glide
-            .with(thumbnailImageView.context)
-            .load(houseModel.imgUrl)
-            .transform(CenterCrop())
-            .into(thumbnailImageView)
     }
 }

@@ -1,26 +1,19 @@
 package com.android.aop.part2.airbnbpractice.ui.main
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.android.aop.part2.airbnbpractice.data.HouseDto
-import com.android.aop.part2.airbnbpractice.data.HouseService
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
-import com.android.aop.part2.airbnbpractice.ui.HouseRecyclerViewAdapter
-import com.android.aop.part2.airbnbpractice.ui.HouseViewPagerAdapter
+import com.android.aop.part2.airbnbpractice.ui.adapter.HouseRecyclerViewAdapter
+import com.android.aop.part2.airbnbpractice.ui.adapter.HouseViewPagerAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -39,13 +32,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initViewModel()
 
-
         binding.mapView.onCreate(savedInstanceState)
-
         binding.mapView.getMapAsync(this)
-
         binding.containerBottomSheet.recyclerView.adapter = houseRecyclerViewAdapter
-
         binding.houseViewPager2.adapter = houseViewPagerAdapter
 
         binding.houseViewPager2.registerOnPageChangeCallback(object :
@@ -59,7 +48,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     CameraUpdate.scrollTo(LatLng(selectedHouseModel.lat, selectedHouseModel.lng))
                         .animate(CameraAnimation.Easing)
 
-
                 naverMap.moveCamera(cameraUpdate)
             }
         })
@@ -72,7 +60,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mainViewModel.mainViewStateLiveData.observe(this) { viewState ->
             when (viewState) {
-
                 is MainViewState.GetHouseList -> {
                     viewState.list.forEach { model ->
                         val marker = Marker().apply {
@@ -89,10 +76,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 is MainViewState.Error -> {
-
+                    //Error 메세지에 대한 화면처리.
                 }
             }
-
         }
     }
 
