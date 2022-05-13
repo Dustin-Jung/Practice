@@ -1,13 +1,14 @@
 package com.android.aop.part2.airbnbpractice.ui.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
+import com.android.aop.part2.airbnbpractice.data.model.HouseItem
 import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 
 class HouseViewHolder(private val binding: ItemHouseInformationBinding) : RecyclerView.ViewHolder(binding.root){
 
-    fun bind(houseModel: HouseModel){
+    fun bind(houseModel: HouseItem){
         val priceTextView = binding.priceTextView
         val titleTextView = binding.titleTextView
         val thumbnailImageView = binding.thumbnailImageView

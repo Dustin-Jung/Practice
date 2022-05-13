@@ -3,12 +3,13 @@ package com.android.aop.part2.airbnbpractice.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.aop.part2.airbnbpractice.data.model.HouseItem
 import com.android.aop.part2.airbnbpractice.databinding.ItemHouseInformationBinding
 import com.android.aop.part2.airbnbpractice.ui.adapter.viewholder.HouseViewHolder
 
 class HouseViewPagerAdapter : RecyclerView.Adapter<HouseViewHolder>() {
 
-    val houseList = mutableListOf<HouseModel>()
+    val houseList = mutableListOf<HouseItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder {
 
@@ -28,7 +29,7 @@ class HouseViewPagerAdapter : RecyclerView.Adapter<HouseViewHolder>() {
         return houseList.size
     }
 
-    fun addAll(list: List<HouseModel>) {
+    fun addAll(list: List<HouseItem>) {
         houseList.addAll(list)
         notifyDataSetChanged()
     }

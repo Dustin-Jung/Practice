@@ -17,7 +17,11 @@ class MainViewModel(private val houseRepository: HouseRepository) : ViewModel() 
     private val _mainViewStateLiveData = MutableLiveData<MainViewState>()
     val mainViewStateLiveData: LiveData<MainViewState> = _mainViewStateLiveData
 
-    fun getHouseListFromAPI() {
+    init {
+        getHouseListFromAPI()
+    }
+
+    private fun getHouseListFromAPI() {
         houseRepository.getHouseList(isSuccess = {list->
             val toHouseItem = list.map { it.toHouseItem() }
             _mainViewStateLiveData.value = MainViewState.GetHouseList(toHouseItem)

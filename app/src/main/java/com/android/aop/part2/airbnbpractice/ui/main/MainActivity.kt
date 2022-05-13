@@ -4,8 +4,12 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.android.aop.part2.airbnbpractice.R
+import com.android.aop.part2.airbnbpractice.data.repo.HouseRepositoryImpl
+import com.android.aop.part2.airbnbpractice.data.source.HouseRemoteDataSourceImpl
 import com.android.aop.part2.airbnbpractice.databinding.ActivityMainBinding
 import com.android.aop.part2.airbnbpractice.ui.adapter.HouseRecyclerViewAdapter
 import com.android.aop.part2.airbnbpractice.ui.adapter.HouseViewPagerAdapter
@@ -14,6 +18,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import java.lang.IllegalArgumentException
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -22,7 +27,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
-
 
     private val houseRecyclerViewAdapter by lazy { HouseRecyclerViewAdapter() }
     private val houseViewPagerAdapter by lazy { HouseViewPagerAdapter() }
@@ -54,8 +58,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initViewModel() {
-
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                    return MainViewModel(HouseRepositoryImpl.getInstance(HouseRemoteDataSourceImpl.getInstance())) as T
+                } else throw IllegalArgumentException()
+            }
+        }).get(MainViewModel::class.java)
         binding.viewModel = mainViewModel
 
         mainViewModel.mainViewStateLiveData.observe(this) { viewState ->

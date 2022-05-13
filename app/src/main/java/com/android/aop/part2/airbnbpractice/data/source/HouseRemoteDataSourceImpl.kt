@@ -26,6 +26,7 @@ class HouseRemoteDataSourceImpl : HouseRemoteDataSource {
                     if (response.isSuccessful.not()) {
                         return // 실패처리에 대한 구현
                     }
+
                     response.body()?.let { dto ->
                         isSuccess.invoke(dto.items)
                     }
@@ -35,5 +36,14 @@ class HouseRemoteDataSourceImpl : HouseRemoteDataSource {
                     isFailure.invoke(t.message ?: "GetHouseListFromAPI 실패")
                 }
             })
+    }
+    companion object {
+
+        private var INSTANCE : HouseRemoteDataSource? = null
+
+        fun getInstance() : HouseRemoteDataSource =
+            INSTANCE ?: HouseRemoteDataSourceImpl().also {
+                INSTANCE = it
+            }
     }
 }
