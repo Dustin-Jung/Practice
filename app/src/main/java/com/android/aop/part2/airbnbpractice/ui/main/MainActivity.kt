@@ -2,6 +2,7 @@ package com.android.aop.part2.airbnbpractice.ui.main
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModel
@@ -18,12 +19,14 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.IllegalArgumentException
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel by viewModels<MainViewModel>()
 
     lateinit var naverMap: NaverMap
     lateinit var locationSource: FusedLocationSource
@@ -58,15 +61,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initViewModel() {
-        mainViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-                    return MainViewModel(HouseRepositoryImpl.getInstance(HouseRemoteDataSourceImpl.getInstance())) as T
-                } else throw IllegalArgumentException()
-            }
-        }).get(MainViewModel::class.java)
         binding.viewModel = mainViewModel
-
         mainViewModel.mainViewStateLiveData.observe(this) { viewState ->
             when (viewState) {
                 is MainViewState.GetHouseList -> {
@@ -79,7 +74,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             iconTintColor = Color.RED
                         }
                     }
-
                     houseRecyclerViewAdapter.addAll(viewState.list)
                     houseViewPagerAdapter.addAll(viewState.list)
                 }

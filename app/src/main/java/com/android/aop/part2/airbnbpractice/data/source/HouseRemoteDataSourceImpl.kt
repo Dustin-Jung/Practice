@@ -8,15 +8,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class HouseRemoteDataSourceImpl : HouseRemoteDataSource {
+class HouseRemoteDataSourceImpl @Inject constructor(private val houseService: HouseService) : HouseRemoteDataSource {
 
     override fun getHouseList(isSuccess: (List<HouseModel>) -> Unit, isFailure: (String) -> Unit) {
-        val houseService = Retrofit.Builder()
-            .baseUrl("https://run.mocky.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(HouseService::class.java)
-
         houseService.getHouseList()
             .enqueue(object : Callback<HouseResponse> {
                 override fun onResponse(
@@ -36,14 +32,5 @@ class HouseRemoteDataSourceImpl : HouseRemoteDataSource {
                     isFailure.invoke(t.message ?: "GetHouseListFromAPI 실패")
                 }
             })
-    }
-    companion object {
-
-        private var INSTANCE : HouseRemoteDataSource? = null
-
-        fun getInstance() : HouseRemoteDataSource =
-            INSTANCE ?: HouseRemoteDataSourceImpl().also {
-                INSTANCE = it
-            }
     }
 }
